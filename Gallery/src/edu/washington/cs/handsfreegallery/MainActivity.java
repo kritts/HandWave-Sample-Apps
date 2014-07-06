@@ -44,7 +44,7 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
     		R.drawable.animal10 };
 	/** */
     private Gallery ga;
-    /** */
+    /** Contains the image */
     private ImageView imageView;
     
     /** Current index of the image within the gallery */
@@ -171,14 +171,15 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
 		});  
 	}
 
-
+	/** Called when the a "hover" is detected - displays the index 
+	 *  of the current image.  */
 	@Override
 	public void onSensorClick(ClickSensor caller) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				Toast.makeText(getBaseContext(), 
-						"You have selected picture " + (currentView + 1), 
+						"You have selected picture " + (currentView + 1),  // TODO: on touch?
 						Toast.LENGTH_SHORT).show();
 			} 
 		});   
