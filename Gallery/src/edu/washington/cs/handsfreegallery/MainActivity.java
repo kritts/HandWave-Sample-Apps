@@ -1,36 +1,38 @@
 package edu.washington.cs.handsfreegallery;
 
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader; 
-import edu.washington.cs.touchfreelibrary.sensors.CameraGestureSensor;
-import edu.washington.cs.touchfreelibrary.sensors.ClickSensor;
 import android.os.Bundle;
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.view.Menu;
 import android.view.View;
+import android.app.Activity;
+import android.widget.Toast;
 import android.view.ViewGroup;
+import android.widget.Gallery;
+import android.content.Context;
+import android.widget.ImageView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Gallery;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.content.res.TypedArray; 
+import org.opencv.android.OpenCVLoader; 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
 import android.widget.AdapterView.OnItemClickListener;
+import edu.washington.cs.touchfreelibrary.sensors.ClickSensor;
+import edu.washington.cs.touchfreelibrary.sensors.CameraGestureSensor;
 
-/** 
- * 
- * */
+/** This application allows a user to navigate through a gallery of images 
+ *  by using left and right gestures to move from one image to another. 
+ *  
+ *  @author Krittika D'Silva (krittika.dsilva@gmail.com)
+ * */ 
 public class MainActivity  extends Activity implements ClickSensor.Listener, CameraGestureSensor.Listener {
 	
 	/** */
 	private CameraGestureSensor mGestureSensor;
 	
-	/** */
+	/** True if the openCV library has been initiated. 
+	 *  False otherwise*/
 	private boolean mOpenCVInitiated;
       
-	/** */
+	/** Array of images that the user can view. */
 	private Integer[] pics = {
     		R.drawable.animal1,
     		R.drawable.animal2,
@@ -42,7 +44,8 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
     		R.drawable.animal8,
     		R.drawable.animal9,
     		R.drawable.animal10 };
-	/** */
+	
+	/** Gallery which displays images. */
     private Gallery ga;
     /** Contains the image */
     private ImageView imageView;
@@ -71,21 +74,20 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
        
         ga = (Gallery)findViewById(R.id.Gallery01);
         ga.setAdapter(new ImageAdapter(this));
-        ga.setOnItemClickListener(new OnItemClickListener() 
-        {
+        ga.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				Toast.makeText(getBaseContext(), 
-						"You have selected picture " + (arg2+1), 
+			public void onItemClick(AdapterView<?> adapter, View givenView, 
+									int index, long arg3) {
+				Toast.makeText(getBaseContext(), "A click was recieved!", 
 						Toast.LENGTH_SHORT).show();
-				imageView.setImageResource(pics[arg2]); 
-				currentView = arg2;
+				imageView.setImageResource(pics[index]); 
+				currentView = index;
 			} 
         }); 
 
 	}
 
+	/** OpenCV library initialization. */
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 		@Override
 		public void onManagerConnected(int status) {
@@ -104,10 +106,15 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
 		}
 	}; 
 	
-    public class ImageAdapter extends BaseAdapter { 
+	
+	/** Used to show a gallery of images */
+    public class ImageAdapter extends BaseAdapter {
+    	/** Context in which the image is displayed. */
     	private Context ctx;
-    	int imageBackground;
+    	/** Index of the image. */
+    	private int imageBackground;
     	
+    	/** Given a context, initializes the image adapter. */
     	public ImageAdapter(Context c) {
 			ctx = c;
 			TypedArray ta = obtainStyledAttributes(R.styleable.Gallery1);
@@ -115,21 +122,13 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
 			ta.recycle();
 		}
 
+    	/** Returns the total number of images available to be shown. */
 		@Override
     	public int getCount() { 
     		return pics.length;
     	}
-
-    	@Override
-    	public Object getItem(int arg) { 
-    		return arg;
-    	}
-
-    	@Override
-    	public long getItemId(int arg) { 
-    		return arg;
-    	}
-
+ 
+		/** Returns the image at the given index. */
     	@Override
     	public View getView(int arg0, View arg1, ViewGroup arg2) {
     		ImageView iv = new ImageView(ctx);
@@ -138,7 +137,19 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
     		iv.setLayoutParams(new Gallery.LayoutParams(150,120));
     		iv.setBackgroundResource(imageBackground);
     		return iv;
-    	} 
+    	}
+
+    	/**Auto-generated method stub; this method is never used */
+		@Override
+		public Object getItem(int arg0) { 
+			return 0;
+		}
+
+		/** Auto-generated method stub; this method is never used */
+		@Override
+		public long getItemId(int position) { 
+			return 0;
+		} 
     }
 	
 	 /** Leftwards gesture detected. If possible, the previous image is shown. */
@@ -171,15 +182,14 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
 		});  
 	}
 
-	/** Called when the a "hover" is detected - displays the index 
-	 *  of the current image.  */
+	/** Called when the a "hover" is detected - shows a simple toast message. */
 	@Override
 	public void onSensorClick(ClickSensor caller) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				Toast.makeText(getBaseContext(), 
-						"You have selected picture " + (currentView + 1),  // TODO: on touch?
+						"A click was recieved!",
 						Toast.LENGTH_SHORT).show();
 			} 
 		});   
