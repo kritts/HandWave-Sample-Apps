@@ -28,62 +28,36 @@ public class PracticeGesturesActivity extends Activity
 
 	private static final int NUMBER_OF_ROUNDS = 40; 
 
-	private CameraGestureSensor mGestureSensor;
-	private long taskStartTime = 0;
-
-	private String subject;
-	private String session;
-	private int order = 0;
+	private CameraGestureSensor mGestureSensor;  
 	private int touchFree;
 
-	private int screenNumber;
-
-	private int mCurrentRound;
-	protected int mRightGesture;
-	protected int mWrongGesture;  
-	protected int mClickCorrect;
-	protected int mClickIncorrect;
-	private int mNumbGesturesReceived = 0;
-	private int mNumbClicksReceived = 0;
-	private int mNumbGesturesIdeal = 0;
-	private int mNumbClickIdeal = 0;
-	private String allGesReceived;
-	private long timeOnScreen;
-	private int eachScreenClick;
-	private int eachScreenGes;
+	private int screenNumber; 
+	private int mCurrentRound; 
 
 	private Random mRandom;
 	private boolean mOpenCVInitiated = false; 
 
 	protected boolean mIsRunning;  
-	private Direction mCurrentDirection;
-	private long taskEndTime = 0;
-	protected List<GestureResult> mGestureHistory;  
+	private Direction mCurrentDirection; 
 	View imageView1;
 
 	@Override	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle bundle = getIntent().getExtras();  
-		subject = bundle.getString("userID");
-		session = bundle.getString("sessNumb"); 
-		order = bundle.getInt("order");
+		Bundle bundle = getIntent().getExtras();   
 		touchFree = bundle.getInt("touchFree");
 
 		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
 		mIsRunning = true;
-		screenNumber = 0; 
-		mRightGesture = mWrongGesture = 0;
+		screenNumber = 0;  
 		mCurrentRound = 0;
 		mGestureSensor = new CameraGestureSensor(this);
 		mGestureSensor.addGestureListener(this);
 		mGestureSensor.addClickListener(this);	 
 
-		mRandom = new Random();  
-		mGestureHistory = new LinkedList<GestureResult>();			
-		openIntroductoryScreen();
-		allGesReceived = "";
+		mRandom = new Random();   		
+		openIntroductoryScreen(); 
 	}
 
 	private void openIntroductoryScreen() { 
@@ -118,25 +92,15 @@ public class PracticeGesturesActivity extends Activity
 				if (imageView1 != null) {  
 					setUpSwipeListener();  
 				}
-			}  
-			taskStartTime = System.currentTimeMillis();
+			}   
 		}
 	} 
 
 	protected void setRandomDirection() {  
 		if(mCurrentRound >= NUMBER_OF_ROUNDS) 
-		{
-			taskEndTime = System.currentTimeMillis(); 
-			long taskTime = taskEndTime - taskStartTime; 
+		{ 
 			mIsRunning = false;
-
-			String outputFile = "User_" + subject + "_Learning_" + session + "_";
-			if (touchFree == 1) {
-				outputFile += "touchfree_";
-			} else {
-				outputFile += "touch_"; 
-			} 
-			writeResultsToFile(outputFile, taskTime); 
+ 
 
 			if (touchFree == 0) { 
 				View imageView1 = findViewById(R.id.imageView1);
@@ -162,27 +126,22 @@ public class PracticeGesturesActivity extends Activity
 					mCurrentScore.setText("" + (mCurrentRound) + "/" + NUMBER_OF_ROUNDS); 
 					
 					int dir = mRandom.nextInt(5);  
-					if(dir == 0) { 
-						mNumbGesturesIdeal++;
+					if(dir == 0) {  
 						mCurrentDirection = Direction.Up;
 						imageView1.setImageResource(R.drawable.arrow_up); 
 					}
-					else if(dir == 1) {
-						mNumbGesturesIdeal++;
+					else if(dir == 1) { 
 						mCurrentDirection = Direction.Down;
 						imageView1.setImageResource(R.drawable.arrow_down); 
 					}
-					else if(dir == 2) {
-						mNumbGesturesIdeal++;
+					else if(dir == 2) { 
 						mCurrentDirection = Direction.Left;
 						imageView1.setImageResource(R.drawable.arrow_left); 
 					}
-					else if(dir == 3) {
-						mNumbGesturesIdeal++;
+					else if(dir == 3) { 
 						mCurrentDirection = Direction.Right;
 						imageView1.setImageResource(R.drawable.arrow_right); 
-					} else if(dir == 4){
-						mNumbClickIdeal++;
+					} else if(dir == 4){ 
 						mCurrentDirection = Direction.Click;
 						imageView1.setImageResource(R.drawable.click);
 					}
@@ -195,20 +154,11 @@ public class PracticeGesturesActivity extends Activity
 					wholeScreen.setBackgroundColor(Color.rgb(red,green,blue));
 					imageView1.setBackgroundColor(Color.rgb(red,green,blue));
 					mDirection.setText("" + directionToString(mCurrentDirection));
-					
-					reinitialize();
+					 
 				}
 			});
 		} 
-	}
-	
-	
-	private void reinitialize() { 
-		allGesReceived = "";  
-		eachScreenClick = 0;
-		eachScreenGes = 0; 
-		timeOnScreen = System.currentTimeMillis();
-	}
+	} 
 
 	public void handleStart(View v) { 
 		screenNumber ++;
@@ -218,219 +168,17 @@ public class PracticeGesturesActivity extends Activity
 	public void handleFinish(View v) {
 		finish();
 	} 
-   
-	protected void writeResultsToFile(String fileName, long taskTime) {
-		File root = android.os.Environment.getExternalStorageDirectory(); 
-		File dir = new File (root.getAbsolutePath() + "/HandWave/LearningExperiment");
-		dir.mkdirs();
-		File file = new File(dir, fileName);
-
-		try {
-			FileOutputStream fos = new FileOutputStream(file + "stats.csv");
-			PrintWriter writer = new PrintWriter(fos);
-
-			// user || session || touchFree || order || totalTime || # gestures received || 
-			// # ideal gestures || # clicks received || # ideal click  
-			
-			String stats = ""; 
-			stats +=  "" + subject + "," + session + "," + touchFree + "," + order;
-			stats += "," + taskTime + "," + mNumbGesturesReceived + ",";
-			stats += mNumbGesturesIdeal + "," + mNumbClicksReceived + "," + mNumbClickIdeal;
-			writer.println(stats);
-			
-			writer.close();
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
- 
-		dir = new File (root.getAbsolutePath() + "/HandWave/LearningExperiment/Detailed");
-		dir.mkdirs();
-		File fileSecond = new File(dir, fileName + "details_stats.csv");
-		try { 
-			FileOutputStream fosSecond = new FileOutputStream(fileSecond);
-			PrintWriter writerSecond = new PrintWriter(fosSecond);
-			
-			// user || session || touchFree || order || round # || expected
-			// time to complete || total gestures || total clicks || directions received
-  
-			String statsDetails = ""; 
-			//statsDetails +=  "";
-			
-			for(GestureResult gr : mGestureHistory) {
-				statsDetails += subject + "," + session + "," + touchFree + "," + order + gr.writeResult() + "\n";
-		 	} 
-			
-			writerSecond.println(statsDetails); 
-		 	writerSecond.close();
-		 	fosSecond.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-	} 
- 	
-	public class GestureResult {
-		private int mRoundNumber;
-		private String mExpectedGesture;
-		private String mDirectionReceived;
-		private long timeFromScreen; 
-		private int numberOfGestures;
-		private int numberOfClicks; 
-		  
-		public GestureResult(int round, String expected, String received, long timeOnScreen, 
-				int numbGestures, int numbClicks) { 
-			mRoundNumber = round;
-			mExpectedGesture = expected;
-			mDirectionReceived = received;
-			timeFromScreen = timeOnScreen; 
-			numberOfGestures = numbGestures;
-			numberOfClicks = numbClicks; 
-		}
-	 
-		public String writeResult() { 
-			return "," + mRoundNumber + "," + timeFromScreen + "," + numberOfGestures + "," 
-					+ numberOfClicks + "," +  mExpectedGesture + "," + mDirectionReceived;
-		}
-	}
-  
-	private void setUpSwipeListener() { 
-		final View imageView1 = findViewById(R.id.imageView1); 
-		imageView1.setOnTouchListener(new OnSwipeTouchListener() 
-		{  
-			public void onSwipeUp() { 
-				if (touchFree == 0 & mIsRunning) {  
-					final long timeCorrectrecieved = System.currentTimeMillis();
-					eachScreenGes++;
-					mNumbGesturesReceived ++; 
-					if(mCurrentDirection == Direction.Up) {
-						mRightGesture++;    
-						allGesReceived += "UP";
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "UP", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
-						setRandomDirection();
-					} else {
-						mWrongGesture++;  
-						allGesReceived += "UP" + ",";
-					} 
-				} 
-			}
-			
-			public void onSwipeRight() { 
-				if (touchFree == 0 & mIsRunning) {  
-					final long timeCorrectrecieved = System.currentTimeMillis();
-					mNumbGesturesReceived ++;
-					eachScreenGes++;
-					if(mCurrentDirection == Direction.Right) {
-						mRightGesture++;   
-						allGesReceived += "RIGHT";
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "RIGHT", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
-						setRandomDirection();
-					} else {
-						mWrongGesture++; 
-						allGesReceived += "RIGHT" + ",";
-					}    
-				} 
-			}
-
-			public void onSwipeLeft() { 
-				if (touchFree == 0 & mIsRunning) {  
-					final long timeCorrectrecieved = System.currentTimeMillis();
-					mNumbGesturesReceived ++; 
-					eachScreenGes++; 
-					if(mCurrentDirection == Direction.Left) {
-						mRightGesture++;  
-						allGesReceived += "LEFT";
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "LEFT", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
-						setRandomDirection();
-					} else {
-						mWrongGesture++; 
-						allGesReceived += "LEFT" + ",";
-					}    
-				} 
-			}
-
-			public void onSwipeDown() { 
-				if (touchFree == 0 & mIsRunning) {  
-					final long timeCorrectrecieved = System.currentTimeMillis();
-					mNumbGesturesReceived ++;
-					eachScreenGes++; 
-					if(mCurrentDirection == Direction.Down) {
-						allGesReceived += "DOWN";
-						mRightGesture++; 
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "DOWN", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
-						setRandomDirection();
-					} else {
-						mWrongGesture++; 
-						allGesReceived += "DOWN" + ",";
-					}  
-				} 
-			}
-
-			public void singleTap() { 
-				if (touchFree == 0 & mIsRunning) {  
-					final long timeCorrectrecieved = System.currentTimeMillis();
-					mNumbClicksReceived++;
-					eachScreenClick++; 
-					runOnUiThread(new Runnable() {    
-						@Override
-						public void run() {    
-							if(mCurrentDirection == Direction.Click) {
-								mClickCorrect++;  
-								allGesReceived += "CLICK";
-								//long timeCorrectrecieved = System.currentTimeMillis();
-								long timeToComplete = timeCorrectrecieved - timeOnScreen;
-								mGestureHistory.add(new GestureResult(mCurrentRound, "CLICK", allGesReceived,
-										timeToComplete, eachScreenGes, eachScreenClick));
-								setRandomDirection();
-							} else {
-								mClickIncorrect++;
-								allGesReceived += "CLICK" + ",";
-							}   
- 
-						}
-					}); 
-				} 
-			}
-
-		});    
-	}  
+     
 	
 	@Override
 	public void onGestureUp(CameraGestureSensor caller, long gestureLength) { 
-		if (touchFree == 1 & mIsRunning) {
-			final long timeCorrectrecieved = System.currentTimeMillis();
-			mNumbGesturesReceived ++;
-			eachScreenGes++; 
+		if (touchFree == 1 & mIsRunning) {  
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() { 
-					if(mCurrentDirection == Direction.Up) {
-						mRightGesture++; 
-						allGesReceived += "UP";
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "UP", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
+					if(mCurrentDirection == Direction.Up) { 
 						setRandomDirection();
-					} else {
-						mWrongGesture++; 
-						allGesReceived += "UP" + ",";
-					} 
+					}  
 				}
 			}); 
 		}
@@ -438,25 +186,13 @@ public class PracticeGesturesActivity extends Activity
 
 	@Override
 	public void onGestureDown(CameraGestureSensor caller, long gestureLength) { 
-		if (touchFree == 1 & mIsRunning) {
-			final long timeCorrectrecieved = System.currentTimeMillis();
-			mNumbGesturesReceived ++;
-			eachScreenGes++;
+		if (touchFree == 1 & mIsRunning) {   
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {    
-					if(mCurrentDirection == Direction.Down) {
-						mRightGesture++; 
-						allGesReceived += "DOWN";
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "DOWN", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
+					if(mCurrentDirection == Direction.Down) { 
 						setRandomDirection();
-					} else {
-						mWrongGesture++; 
-						allGesReceived += "DOWN" + ",";
-					} 
+					}  
 				}
 			}); 
 		}
@@ -464,25 +200,13 @@ public class PracticeGesturesActivity extends Activity
 
 	@Override
 	public void onGestureLeft(CameraGestureSensor caller, long gestureLength) { 
-		if (touchFree == 1 & mIsRunning) {
-			final long timeCorrectrecieved = System.currentTimeMillis();
-			mNumbGesturesReceived ++;
-			eachScreenGes++;
+		if (touchFree == 1 & mIsRunning) {  
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {   
-					if(mCurrentDirection == Direction.Left) {
-						mRightGesture++; 
-						allGesReceived += "LEFT";
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "LEFT", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
+					if(mCurrentDirection == Direction.Left) { 
 						setRandomDirection();
-					} else {
-						mWrongGesture++; 
-						allGesReceived += "LEFT" + ",";
-					} 
+					}  
 				} 
 			});
 
@@ -491,24 +215,12 @@ public class PracticeGesturesActivity extends Activity
 
 	@Override
 	public void onGestureRight(CameraGestureSensor caller, long gestureLength) { 
-		if (touchFree == 1 & mIsRunning) {
-			final long timeCorrectrecieved = System.currentTimeMillis();
-			mNumbGesturesReceived ++;
-			eachScreenGes++; 
+		if (touchFree == 1 & mIsRunning) { 
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {   
 					if(mCurrentDirection == Direction.Right) { 
-						mRightGesture++; 
-						allGesReceived += "RIGHT";
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "RIGHT", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
 						setRandomDirection();
-					} else {
-						mWrongGesture++; 
-						allGesReceived += "RIGHT" + ",";
 					} 
 				}
 			});
@@ -518,25 +230,14 @@ public class PracticeGesturesActivity extends Activity
 
 	@Override
 	public void onSensorClick(ClickSensor caller) { 	
-		if (touchFree == 1 & mIsRunning) {   
-			final long timeCorrectrecieved = System.currentTimeMillis();
-			mNumbClicksReceived ++;
+		if (touchFree == 1 & mIsRunning) {     
 			eachScreenClick++;
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {  
-					if(mCurrentDirection == Direction.Click) { 
-						mRightGesture++; 
-						allGesReceived += "CLICK";
-						//long timeCorrectrecieved = System.currentTimeMillis();
-						long timeToComplete = timeCorrectrecieved - timeOnScreen;
-						mGestureHistory.add(new GestureResult(mCurrentRound, "CLICK", allGesReceived,
-								timeToComplete, eachScreenGes, eachScreenClick));
+					if(mCurrentDirection == Direction.Click) {  
 						setRandomDirection();
-					} else {
-						mWrongGesture++; 
-						allGesReceived += "CLICK" + ",";
-					} 
+					}  
 				} 
 			}); 
 		} 
