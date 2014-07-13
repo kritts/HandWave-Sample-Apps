@@ -25,7 +25,8 @@ import edu.washington.cs.touchfreelibrary.sensors.CameraGestureSensor;
  * */ 
 public class MainActivity  extends Activity implements ClickSensor.Listener, CameraGestureSensor.Listener {
 	
-	/** */
+	/** Senses for left, right, up, and down gestures. Calls the appropriate 
+	 *  functions when the motions are recognized. */
 	private CameraGestureSensor mGestureSensor;
 	
 	/** True if the openCV library has been initiated. 
