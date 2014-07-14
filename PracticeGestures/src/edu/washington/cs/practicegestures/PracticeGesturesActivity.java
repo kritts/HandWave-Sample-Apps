@@ -157,7 +157,7 @@ public class PracticeGesturesActivity extends Activity
 					 
 				}
 			});
-		} 
+		} 	
 	} 
 
 	public void handleStart(View v) { 
@@ -230,8 +230,7 @@ public class PracticeGesturesActivity extends Activity
 
 	@Override
 	public void onSensorClick(ClickSensor caller) { 	
-		if (touchFree == 1 & mIsRunning) {     
-			eachScreenClick++;
+		if (touchFree == 1 & mIsRunning) {  
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {  
