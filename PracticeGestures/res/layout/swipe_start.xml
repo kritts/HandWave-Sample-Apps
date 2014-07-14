@@ -11,7 +11,9 @@
     <TextView
         android:id="@+id/textViewSubject"
         android:layout_width="wrap_content"
-        android:layout_height="40dp" 
+        android:layout_height="40dp"
+        android:layout_above="@+id/touchfree"
+        android:layout_alignParentTop="true"
         android:gravity="center"
         android:text="@string/introduction"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -20,15 +22,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp" >
-
-        <Button
-            android:id="@+id/touchfree"
-            android:layout_width="150dip"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:gravity="center"
-            android:onClick="openTouchFree"
-            android:text="@string/begin" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/touchfree"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewSubject"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="97dp"
+        android:focusable="true"
+        android:gravity="center"
+        android:onClick="openTouchFree"
+        android:text="@string/begin" />
 
 </RelativeLayout>

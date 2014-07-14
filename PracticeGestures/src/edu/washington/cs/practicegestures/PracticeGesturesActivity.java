@@ -77,8 +77,9 @@ public class PracticeGesturesActivity extends Activity
 					mCurrentRound++; 
 					mCurrentScore.setText("" + (mCurrentRound) + "/" + NUMBER_OF_ROUNDS);
 					
-					
-					switch(mRandom.nextInt(5)) {
+					int randomNumb = mRandom.nextInt(5);
+					Log.e(TAG, "random: " + randomNumb);
+					switch(randomNumb) {
 					case 0: 
 						mCurrentDirection = Direction.Up;
 						imageView1.setImageResource(R.drawable.arrow_up); 
