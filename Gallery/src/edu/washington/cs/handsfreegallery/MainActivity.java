@@ -64,8 +64,7 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
         
         mGestureSensor = new CameraGestureSensor(this);
 		mGestureSensor.addGestureListener(this);
-		mGestureSensor.enableClickByColor(true);
-
+		mGestureSensor.enableClickByColor(true); 
 		mGestureSensor.addClickListener(this);
         
 		mOpenCVInitiated = false;
@@ -207,7 +206,7 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
 	}
 	  
 	/** Called when the activity is paused. The gesture detector is stopped
-	 *  so that gestures are no longer recognized. */
+	 *  so that the camera is no longer working to recognize gestures. */
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -217,7 +216,7 @@ public class MainActivity  extends Activity implements ClickSensor.Listener, Cam
 	} 
     
 	/** Upwards gesture detected. */
-	@Override
+	@Override	
 	public void onGestureUp(CameraGestureSensor caller, long gestureLength) { 
 		// No action performed 
 	}

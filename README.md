@@ -7,7 +7,8 @@ HandWave-Sample-Apps
 HandWave is a library that allows developers to enable touch-free interactions in their apps. 
 HandWave uses the built-in, forward-facing camera on a device to recognize users’ in-air gestures. The API provides developers with easy access to a variety of touch-free gestures which invoke callback functions when detected. 
 
-These apps show different ways in which the library can be used (including the code to do so!)
+These apps show different ways in which the library can be used (including the code to do so!).
+
 Code for HandWave can be found [here] (https://github.com/kritts/HandWave).
 
 ## Example apps
@@ -16,7 +17,7 @@ Code for HandWave can be found [here] (https://github.com/kritts/HandWave).
 * **Gallery** 
 	* This is a simple app that allows a user to view images in a gallery. The user can scroll left or right (to the next or previous image) by making a left or right gesture in front of the camera.
 * **PracticeGestures** 
-	*
+	* This 
 
 Note: I've created a few more apps using the HandWave library and plan to upload them soon.
 	

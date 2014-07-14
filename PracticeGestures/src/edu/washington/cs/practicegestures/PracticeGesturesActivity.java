@@ -28,10 +28,12 @@ public class PracticeGesturesActivity extends Activity
 
 	private static final int NUMBER_OF_ROUNDS = 40; 
 
-	private CameraGestureSensor mGestureSensor;  
+	private CameraGestureSensor mGestureSensor;
+ 
 	private int touchFree;
 
-	private int screenNumber; 
+	private int screenNumber;
+
 	private int mCurrentRound; 
 
 	private Random mRandom;
@@ -44,9 +46,7 @@ public class PracticeGesturesActivity extends Activity
 	@Override	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		Bundle bundle = getIntent().getExtras();   
-		touchFree = bundle.getInt("touchFree");
+ 
 
 		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
 		mIsRunning = true;
@@ -56,7 +56,7 @@ public class PracticeGesturesActivity extends Activity
 		mGestureSensor.addGestureListener(this);
 		mGestureSensor.addClickListener(this);	 
 
-		mRandom = new Random();   		
+		mRandom = new Random(); 			
 		openIntroductoryScreen(); 
 	}
 
@@ -90,7 +90,7 @@ public class PracticeGesturesActivity extends Activity
 				setRandomDirection(); 
 				View imageView1 = findViewById(R.id.imageView1);  
 				if (imageView1 != null) {  
-					setUpSwipeListener();  
+//					setUpSwipeListener();  
 				}
 			}   
 		}
@@ -98,9 +98,9 @@ public class PracticeGesturesActivity extends Activity
 
 	protected void setRandomDirection() {  
 		if(mCurrentRound >= NUMBER_OF_ROUNDS) 
-		{ 
+		{  
 			mIsRunning = false;
- 
+  
 
 			if (touchFree == 0) { 
 				View imageView1 = findViewById(R.id.imageView1);
@@ -138,7 +138,7 @@ public class PracticeGesturesActivity extends Activity
 						mCurrentDirection = Direction.Left;
 						imageView1.setImageResource(R.drawable.arrow_left); 
 					}
-					else if(dir == 3) { 
+					else if(dir == 3) {   
 						mCurrentDirection = Direction.Right;
 						imageView1.setImageResource(R.drawable.arrow_right); 
 					} else if(dir == 4){ 
@@ -157,9 +157,9 @@ public class PracticeGesturesActivity extends Activity
 					 
 				}
 			});
-		} 	
-	} 
-
+		} 
+	}
+	 
 	public void handleStart(View v) { 
 		screenNumber ++;
 		openIntroductoryScreen();
@@ -167,9 +167,8 @@ public class PracticeGesturesActivity extends Activity
 	
 	public void handleFinish(View v) {
 		finish();
-	} 
-     
-	
+	}  
+
 	@Override
 	public void onGestureUp(CameraGestureSensor caller, long gestureLength) { 
 		if (touchFree == 1 & mIsRunning) {  
@@ -241,7 +240,7 @@ public class PracticeGesturesActivity extends Activity
 			}); 
 		} 
 	}
-	 
+
 	private enum Direction {
 		Up, Down, Left, Right, Click
 	}
