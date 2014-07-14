@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp"
-        android:text="Success! You're done with this task."
+        android:text="@string/finished"
         android:gravity="center"
         
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -26,12 +26,14 @@
          android:layout_width="130dip"
          android:layout_height="wrap_content"
          android:layout_alignParentBottom="true"
-         android:layout_centerHorizontal="true"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentRight="true"
          android:layout_marginBottom="119dp"
+         android:background="@drawable/button_red"
          android:focusable="true"
-         android:gravity="center" 
          android:focusableInTouchMode="true"
+         android:gravity="center"
          android:onClick="handleFinish"
-         android:text="Finish" />
+         android:text="@string/returnBack" />
 
 </RelativeLayout>

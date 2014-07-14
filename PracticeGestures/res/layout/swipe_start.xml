@@ -11,10 +11,9 @@
     <TextView
         android:id="@+id/textViewSubject"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignRight="@+id/linearLayout1"
+        android:layout_height="40dp" 
         android:gravity="center"
-        android:text="Participant:"
+        android:text="@string/introduction"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
@@ -29,7 +28,7 @@
             android:focusable="true"
             android:gravity="center"
             android:onClick="openTouchFree"
-            android:text="Touch-Free" />
+            android:text="@string/begin" />
     </LinearLayout>
 
 </RelativeLayout>

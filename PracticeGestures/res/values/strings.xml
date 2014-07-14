@@ -4,10 +4,14 @@
     <string name="app_name">Learning Experiment</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
- 	<string name="rightScore"> a</string>
- 	<string name="wrongScore">a</string>  
- 	<string name="direction">a </string>
- 	<string name="score">a </string>
+ 	<string name="rightScore"> </string>
+ 	<string name="wrongScore"></string>  
+ 	<string name="direction"> </string>
+ 	<string name="score"> </string>
+ 	<string name="finished">You\'ve finished the set of gestures!</string>
+ 	<string name="returnBack">Return back to the main menu</string>
+ 	<string name="begin">Begin</string>
+ 	<string name="introduction">You can begin the game below.</string>
  	
  	
 </resources>
