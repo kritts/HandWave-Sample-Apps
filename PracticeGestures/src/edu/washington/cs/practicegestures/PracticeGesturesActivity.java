@@ -16,14 +16,16 @@ import edu.washington.cs.touchfreelibrary.sensors.ClickSensor;
 import edu.washington.cs.touchfreelibrary.sensors.CameraGestureSensor;
   
 
-/**  
+/** This game has multiple rounds. In each round, a direction (left, right,
+ *  up, down, or a click) is displayed to the user. The user moves onto the 
+ *  next round when they make the prompted gesture in front of the camera.  
  * 
  *  @author Krittika D'Silva (krittika.dsilva@gmail.com) */
 public class PracticeGesturesActivity extends Activity 
 				implements ClickSensor.Listener, CameraGestureSensor.Listener {
 	private static final String TAG = "PracticeGesturesActivity";
 
-	/** The total number of rounds can be played. */
+	/** The total number of rounds played. */
 	private static final int NUMBER_OF_ROUNDS = 40; 
 	
 	/** Sensor that detects gestures. Calls the appropriate 
@@ -35,9 +37,11 @@ public class PracticeGesturesActivity extends Activity
 	
 	/** Produces a random number - used to change the background. */
 	private Random mRandom;
+	
 	/** True if the openCV library has been initiated. 
 	 *  False otherwise*/
-	private boolean mOpenCVInitiated = false; 
+	private boolean mOpenCVInitiated = false;
+	
 	/** The current direction that the user is being 
 	 *  prompted to gesture towards.*/
 	private Direction mCurrentDirection;
@@ -45,29 +49,33 @@ public class PracticeGesturesActivity extends Activity
 	/** Called when the activity is first created. */
 	@Override	
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState); 
-		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback); 
-		mCurrentRound = 0;
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_start);
+		
+		// Initialize openCV
+		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
+		 
 		mGestureSensor = new CameraGestureSensor(this);
 		mGestureSensor.addGestureListener(this);
 		mGestureSensor.addClickListener(this);	 
 
-		mRandom = new Random(); 			
-		setContentView(R.layout.activity_start);
+		mRandom = new Random();
+		mCurrentRound = 0;
 		setRandomDirection();
 	}
 
- 
+    /** Moves onto the next screen. If all of the rounds are over,
+     *  opens the final screen. */
 	protected void setRandomDirection() {  
 		if(mCurrentRound >= NUMBER_OF_ROUNDS) { 
+			// Game is over   
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {  
 					setContentView(R.layout.end); 
 					mGestureSensor.stop();
 				}
-			});
-
+			}); 
 		} else {       
 			runOnUiThread(new Runnable() {     
 				@Override
@@ -79,25 +87,30 @@ public class PracticeGesturesActivity extends Activity
 					mCurrentScore.setText("" + (mCurrentRound) + "/" + NUMBER_OF_ROUNDS);
 					
 					int randomNumb = mRandom.nextInt(5);
-					Log.e(TAG, "random: " + randomNumb);
-					switch(randomNumb) {
-					case 0: 
+					switch(Integer.valueOf(randomNumb)) {
+					case 0:  
 						mCurrentDirection = Direction.Up;
-						imageView1.setImageResource(R.drawable.arrow_up); 
-					case 1:  
+						imageView1.setImageResource(R.drawable.arrow_up);
+						break;
+					case 1:   
 						mCurrentDirection = Direction.Down;
-						imageView1.setImageResource(R.drawable.arrow_down); 
-					case 2:   
+						imageView1.setImageResource(R.drawable.arrow_down);
+						break;
+					case 2:    
 						mCurrentDirection = Direction.Left;
-						imageView1.setImageResource(R.drawable.arrow_left); 
-					case 3:     
+						imageView1.setImageResource(R.drawable.arrow_left);
+						break;
+					case 3:      
 						mCurrentDirection = Direction.Right;
-						imageView1.setImageResource(R.drawable.arrow_right); 
-					case 4:   
+						imageView1.setImageResource(R.drawable.arrow_right);
+						break;
+					case 4:    
 						mCurrentDirection = Direction.Click;
 						imageView1.setImageResource(R.drawable.click);
+						break;
 					}
 					
+					// Makes the background color look quite nice
 					int red = mRandom.nextInt(256-150) + 150;
 					int green = mRandom.nextInt(256-150) + 150;
 					int blue = mRandom.nextInt(256-150) + 150;
@@ -105,25 +118,28 @@ public class PracticeGesturesActivity extends Activity
 					RelativeLayout wholeScreen = (RelativeLayout) findViewById(R.id.setArrows);	
 					wholeScreen.setBackgroundColor(Color.rgb(red,green,blue));
 					imageView1.setBackgroundColor(Color.rgb(red,green,blue));
-					mDirection.setText("" + directionToString(mCurrentDirection));
-					 
+					mDirection.setText("" + directionToString(mCurrentDirection)); 
 				}
 			});
 		} 
 	}
 	 
+	/** Closes the current activity. This method is called when the 
+	 *  user is finished with the game and is on the final screen; 
+	 *  closing that activity takes them back to the main screen. */
 	public void handleFinish(View v) {
 		finish();
 	}  
 	
-	/** */
+	/** Given a Direction, checks whether that direction is the 
+	 *  same as the currently anticipated gesture. Moves onto the next 
+	 *  screen if it is. */
 	private void checkGestureAccuracy(Direction direction) {
 			final Direction userDirection = direction;
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {   
-					
-					if(mCurrentDirection == userDirection) {  
+					if(mCurrentDirection == userDirection) { 
 						setRandomDirection();
 					}  
 				} 
