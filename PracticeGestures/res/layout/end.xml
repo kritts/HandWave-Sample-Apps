@@ -10,19 +10,18 @@
     tools:context=".StartActivity" >
 
      <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp"
         android:text="@string/finished"
-        android:gravity="center"
-        
+        android:gravity="center"  
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
      <Button
-         android:id="@+id/button1"
+         android:id="@+id/home"
          android:layout_width="130dip"
          android:layout_height="wrap_content"
          android:layout_alignParentBottom="true"
@@ -32,8 +31,16 @@
          android:background="@drawable/button_red"
          android:focusable="true"
          android:focusableInTouchMode="true"
-         android:gravity="center"
-         android:onClick="handleFinish"
+         android:gravity="center" 
          android:text="@string/returnBack" />
+
+     <TextView
+         android:id="@+id/status"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/textView"
+         android:layout_below="@+id/textView"
+         android:text=""
+         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

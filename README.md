@@ -17,7 +17,7 @@ Code for HandWave can be found [here] (https://github.com/kritts/HandWave).
 * **Gallery** 
 	* This is a simple app that allows a user to view images in a gallery. The user can scroll left or right (to the next or previous image) by making a left or right gesture in front of the camera.
 * **PracticeGestures** 
-	* This 
+	* This is a game called 25 Gestures. There are 25 rounds in which the player is prompted to make a gesture in a specific direction (either up, down, left, right, or "click") in front of the camera. The player automatically moves onto the next round when the camera detects an accurate gesture.
 
 Note: I've created a few more apps using the HandWave library and plan to upload them soon.
 	

@@ -1,17 +1,18 @@
 package edu.washington.cs.practicegestures;
  
-import java.util.Random;   
+import java.util.Random; 
 import android.util.Log;  
 import android.os.Bundle;  
 import android.view.View;    
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.widget.TextView;      
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.RelativeLayout; 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.LoaderCallbackInterface;  
 import edu.washington.cs.touchfreelibrary.sensors.ClickSensor;
 import edu.washington.cs.touchfreelibrary.sensors.CameraGestureSensor;
   
@@ -26,7 +27,7 @@ public class PracticeGesturesActivity extends Activity
 	private static final String TAG = "PracticeGesturesActivity";
 
 	/** The total number of rounds played. */
-	private static final int NUMBER_OF_ROUNDS = 40; 
+	private static final int NUMBER_OF_ROUNDS = 25; 
 	
 	/** Sensor that detects gestures. Calls the appropriate 
 	 *  functions when the motions are recognized. */
@@ -45,7 +46,10 @@ public class PracticeGesturesActivity extends Activity
 	/** The current direction that the user is being 
 	 *  prompted to gesture towards.*/
 	private Direction mCurrentDirection;
-	 
+	
+	/** */
+	private long mStartTime;
+	
 	/** Called when the activity is first created. */
 	@Override	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,7 @@ public class PracticeGesturesActivity extends Activity
 
 		mRandom = new Random();
 		mCurrentRound = 0;
+		mStartTime = System.currentTimeMillis();
 		setRandomDirection();
 	}
 
@@ -68,11 +73,18 @@ public class PracticeGesturesActivity extends Activity
      *  opens the final screen. */
 	protected void setRandomDirection() {  
 		if(mCurrentRound >= NUMBER_OF_ROUNDS) { 
+			Intent intent = new Intent(this, FinishGame.class);
+			Log.e(TAG, "" + System.currentTimeMillis() );
+			Log.e(TAG, "" + mStartTime );
+			
+			long totalTime = System.currentTimeMillis() - mStartTime; 
+			intent.putExtra("time", totalTime);
+	    	startActivity(intent);
+	    	
 			// Game is over   
 			runOnUiThread(new Runnable() {    
 				@Override
-				public void run() {  
-					setContentView(R.layout.end); 
+				public void run() { 
 					mGestureSensor.stop();
 				}
 			}); 

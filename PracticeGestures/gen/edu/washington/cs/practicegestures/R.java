@@ -56,19 +56,20 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f04000c;
+        public static final int action_settings=0x7f04000d;
         public static final int any=0x7f040000;
         public static final int back=0x7f040001;
-        public static final int button1=0x7f040009;
         public static final int front=0x7f040002;
+        public static final int home=0x7f040009;
         public static final int imageView1=0x7f040004;
         public static final int relative_layout=0x7f040007;
         public static final int setArrows=0x7f040003;
-        public static final int textView1=0x7f040008;
+        public static final int status=0x7f04000a;
+        public static final int textView=0x7f040008;
         public static final int textView3=0x7f040006;
         public static final int textView4=0x7f040005;
-        public static final int textViewSubject=0x7f04000a;
-        public static final int touchfree=0x7f04000b;
+        public static final int textViewSubject=0x7f04000b;
+        public static final int touchfree=0x7f04000c;
     }
     public static final class layout {
         public static final int activity_start=0x7f030000;
@@ -82,15 +83,14 @@ containing a value of this type.
     public static final class string {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
-        public static final int begin=0x7f050009;
-        public static final int direction=0x7f050005;
-        public static final int finished=0x7f050007;
-        public static final int hello_world=0x7f050002;
-        public static final int introduction=0x7f05000a;
-        public static final int returnBack=0x7f050008;
-        public static final int rightScore=0x7f050003;
-        public static final int score=0x7f050006;
-        public static final int wrongScore=0x7f050004;
+        public static final int begin=0x7f050008;
+        public static final int direction=0x7f050004;
+        public static final int finished=0x7f050006;
+        public static final int introduction=0x7f050009;
+        public static final int returnBack=0x7f050007;
+        public static final int rightScore=0x7f050002;
+        public static final int score=0x7f050005;
+        public static final int wrongScore=0x7f050003;
     }
     public static final class style {
         /** 

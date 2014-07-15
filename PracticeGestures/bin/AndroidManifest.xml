@@ -29,6 +29,10 @@
         <activity
             android:name="edu.washington.cs.practicegestures.PracticeGesturesActivity" >
         </activity>
+        
+     	<activity
+            android:name="edu.washington.cs.practicegestures.FinishGame" >
+        </activity>
 
         
     </application>  
