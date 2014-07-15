@@ -7,7 +7,14 @@ import android.widget.Button;
 import android.content.Intent;
 import android.view.View.OnClickListener; 
 
-public class StartActivity extends Activity {    
+/** This is the first screen in the gesture game application.
+ *  The user can start the game whenever they are reading by clicking on the 
+ *  start button.
+ *  
+ *  @author Krittika D'Silva (krittika.dsilva@gmail.com) */
+public class StartActivity extends Activity {
+	
+	/** Starts camera gesture activity. */
 	private Button mStart;	
 	  
 	@Override

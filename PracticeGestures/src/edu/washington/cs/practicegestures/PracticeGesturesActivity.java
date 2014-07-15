@@ -16,35 +16,37 @@ import edu.washington.cs.touchfreelibrary.sensors.ClickSensor;
 import edu.washington.cs.touchfreelibrary.sensors.CameraGestureSensor;
   
 
-/** 
+/**  
  * 
  *  @author Krittika D'Silva (krittika.dsilva@gmail.com) */
 public class PracticeGesturesActivity extends Activity 
 				implements ClickSensor.Listener, CameraGestureSensor.Listener {
-	
 	private static final String TAG = "PracticeGesturesActivity";
 
-	/** */
+	/** The total number of rounds can be played. */
 	private static final int NUMBER_OF_ROUNDS = 40; 
-	/** */
+	
+	/** Sensor that detects gestures. Calls the appropriate 
+	 *  functions when the motions are recognized. */
 	private CameraGestureSensor mGestureSensor;
-	/** */
+	
+	/** The current round that the user is playing on. */
 	private int mCurrentRound;
-	/** */
+	
+	/** Produces a random number - used to change the background. */
 	private Random mRandom;
-	/** */
-	private boolean mOpenCVInitiated = false;
-	/** */
-	protected boolean mIsRunning;
-	/** */
+	/** True if the openCV library has been initiated. 
+	 *  False otherwise*/
+	private boolean mOpenCVInitiated = false; 
+	/** The current direction that the user is being 
+	 *  prompted to gesture towards.*/
 	private Direction mCurrentDirection;
 	 
-
+	/** Called when the activity is first created. */
 	@Override	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
-		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
-		mIsRunning = true; 
+		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback); 
 		mCurrentRound = 0;
 		mGestureSensor = new CameraGestureSensor(this);
 		mGestureSensor.addGestureListener(this);
@@ -53,17 +55,16 @@ public class PracticeGesturesActivity extends Activity
 		mRandom = new Random(); 			
 		setContentView(R.layout.activity_start);
 		setRandomDirection();
-		
 	}
 
  
 	protected void setRandomDirection() {  
-		if(mCurrentRound >= NUMBER_OF_ROUNDS) {  
-			mIsRunning = false; 
+		if(mCurrentRound >= NUMBER_OF_ROUNDS) { 
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {  
 					setContentView(R.layout.end); 
+					mGestureSensor.stop();
 				}
 			});
 
@@ -111,23 +112,23 @@ public class PracticeGesturesActivity extends Activity
 		} 
 	}
 	 
-
 	public void handleFinish(View v) {
 		finish();
 	}  
 	
 	/** */
-	private void checkGestureAccuracy(final Direction direction) { 
-		if (mIsRunning) {  
+	private void checkGestureAccuracy(Direction direction) {
+			final Direction userDirection = direction;
 			runOnUiThread(new Runnable() {    
 				@Override
 				public void run() {   
-					if(mCurrentDirection == direction) {  
+					
+					if(mCurrentDirection == userDirection) {  
 						setRandomDirection();
 					}  
 				} 
 			}); 
-		} 
+		  
 	}
 	/** Moves onto the next screen if an upwards gesture is received. */
 	@Override
@@ -162,9 +163,7 @@ public class PracticeGesturesActivity extends Activity
 	public void onSensorClick(ClickSensor caller) { 	
 		checkGestureAccuracy(Direction.Click);
 	}
-
-
-	
+  
 	/** List of the five directions that the camera sensor can detect. */
 	private enum Direction {
 		Up, Down, Left, Right, Click
