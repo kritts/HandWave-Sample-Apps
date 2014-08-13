@@ -1,60 +1,47 @@
 package edu.washington.cs.gesturescrollertest;
 
+import android.util.Log;
+import android.os.Bundle; 
+import java.util.Scanner;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Scanner;
-
+import android.app.Activity;
+import android.widget.TextView;
+import android.view.WindowManager;
+import android.view.ViewTreeObserver;
+import org.opencv.android.OpenCVLoader;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
-
-import android.app.Activity;
-import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.view.Menu;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.widget.TextView;
 import edu.washington.cs.touchfreelibrary.sensors.CameraGestureSensor;
 import edu.washington.cs.touchfreelibrary.touchemulation.GestureScroller;
 
+/** This is the first screen in the TextReader app. 
+ *  It only has one function - to let the user scroll through 
+ *  a text file by gesturing in front of the camera. 
+ *  @author Krittika D'Silva (krittika.dsilva@gmail.com) */
+
 public class MainActivity extends Activity {
 	private static final String TAG = "ScrollerActivity";
-	private CameraGestureSensor mGestureSensor;
-	private GestureScroller mGestureScroller;
 	
+	/** Sensor that detects gestures. Calls the appropriate 
+	 *  functions when the motions are recognized. */ 
+	private CameraGestureSensor mGestureSensor;
+	
+	/** Sensor that recognizes scroll gestures. */
+	private GestureScroller mGestureScroller;
+	/** True if a gesture has been received. */
 	private boolean gestureStarted = false;
 	
-	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-	    @Override
-	    public void onManagerConnected(int status) {
-	        switch (status) {
-	            case LoaderCallbackInterface.SUCCESS:
-	            {
-	                Log.i(TAG, "OpenCV loaded successfully");
-	                
-	                CameraGestureSensor.loadLibrary();
-	                
-	                // more initialization steps go here
-	                
-	                gestureStarted = true;
-	                mGestureSensor.start();
-	                mGestureScroller.start();
-	            } break;
-	            default:
-	            {
-	                super.onManagerConnected(status);
-	            } break;
-	        }
-	    }
-	};
-	
+	/** TextView containing the text to be shown. */
 	private TextView mScrollingTextBox;
+	
+	/** Thread containing text displayed on the screen - the text changes
+	 *  as the user scrolls. */
 	private Thread mTextLoadThread = new Thread() {
 		@Override
 		public void run() {
-			InputStream othelloInput = getResources().openRawResource(R.raw.recipes);
+			InputStream othelloInput = getResources().openRawResource(R.raw.othello);
 			
 			try {
 				Scanner s = new java.util.Scanner(othelloInput).useDelimiter("\\A");
@@ -65,6 +52,7 @@ public class MainActivity extends Activity {
 		}
 	};
 	
+	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -98,14 +86,10 @@ public class MainActivity extends Activity {
 		  });
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.scroller, menu);
-		return true;
-	}
-	
+ 
+	/** Called when the focus on the window changes - the gesture detector is stopped
+	 *  when the window doesn't have focus 
+	 *  so that the camera is no longer working to recognize gestures. */
 	@Override
 	public void onWindowFocusChanged (boolean hasFocus) {
 		if(!gestureStarted)
@@ -116,4 +100,29 @@ public class MainActivity extends Activity {
 		else
 			mGestureSensor.stop();
 	}
+	
+	/** OpenCV library initialization. */ 
+	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+	    @Override
+	    public void onManagerConnected(int status) {
+	        switch (status) {
+	            case LoaderCallbackInterface.SUCCESS:
+	            {
+	                Log.i(TAG, "OpenCV loaded successfully");
+	                
+	                CameraGestureSensor.loadLibrary();
+	                
+	                // more initialization steps go here
+	                
+	                gestureStarted = true;
+	                mGestureSensor.start();
+	                mGestureScroller.start();
+	            } break;
+	            default:
+	            {
+	                super.onManagerConnected(status);
+	            } break;
+	        }
+	    }
+	};
 }
