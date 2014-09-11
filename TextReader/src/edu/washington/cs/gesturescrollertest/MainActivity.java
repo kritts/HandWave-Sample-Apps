@@ -35,23 +35,7 @@ public class MainActivity extends Activity {
 	
 	/** TextView containing the text to be shown. */
 	private TextView mScrollingTextBox;
-	
-	/** Thread containing text displayed on the screen - the text changes
-	 *  as the user scrolls. */
-	private Thread mTextLoadThread = new Thread() {
-		@Override
-		public void run() {
-			InputStream othelloInput = getResources().openRawResource(R.raw.othello);
-			
-			try {
-				Scanner s = new java.util.Scanner(othelloInput).useDelimiter("\\A");
-			    mScrollingTextBox.setText(s.hasNext() ? s.next() : "");
-				othelloInput.close();
-			} catch (IOException e) {
-			}
-		}
-	};
-	
+ 	
 	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -79,13 +63,28 @@ public class MainActivity extends Activity {
 		if (viewTreeObserver.isAlive()) {
 		  viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			  @Override
-			  public void onGlobalLayout() 
-			  {
+			  public void onGlobalLayout() {
 				  mGestureScroller.setVerticalPointsWithView(mScrollingTextBox, 100);
 			  }
 		  });
 		}
 	}
+ 
+	/** Thread containing text displayed on the screen - the text changes
+	 *  as the user scrolls. */
+	private Thread mTextLoadThread = new Thread() {
+		@Override
+		public void run() {
+			InputStream othelloInput = getResources().openRawResource(R.raw.othello);
+			
+			try {
+				Scanner s = new java.util.Scanner(othelloInput).useDelimiter("\\A");
+			    mScrollingTextBox.setText(s.hasNext() ? s.next() : "");
+				othelloInput.close();
+			} catch (IOException e) {
+			}
+		}
+	};
  
 	/** Called when the focus on the window changes - the gesture detector is stopped
 	 *  when the window doesn't have focus 
@@ -106,14 +105,11 @@ public class MainActivity extends Activity {
 	    @Override
 	    public void onManagerConnected(int status) {
 	        switch (status) {
-	            case LoaderCallbackInterface.SUCCESS:
-	            {
+	            case LoaderCallbackInterface.SUCCESS: {
 	                Log.i(TAG, "OpenCV loaded successfully");
 	                
 	                CameraGestureSensor.loadLibrary();
-	                
-	                // more initialization steps go here
-	                
+	                 
 	                gestureStarted = true;
 	                mGestureSensor.start();
 	                mGestureScroller.start();
